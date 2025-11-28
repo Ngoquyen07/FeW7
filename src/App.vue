@@ -1,30 +1,44 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import { RouterLink, RouterView } from "vue-router";
+import auth from "/src/api/auth/auth.ts";
+import router from "./router/index.ts";
+async function logout() {
+  try {
+    await auth.logout();
+    router.push("/login"); // chuyển về login
+  } catch (error) {
+    console.log("Logout error:", error);
+  }
+}
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <nav class="navbar navbar-expand-lg navbar-light bg-light px-3 border-bottom">
+
+    <!-- Home bên trái -->
+    <RouterLink class="navbar-brand btn btn-lg" style="background: bisque " to="/">Home</RouterLink>
+
+    <!-- Đẩy các nút sang phải -->
+    <div class="ms-auto d-flex gap-2">
+
+      <RouterLink class="btn btn-primary" to="/login">
+        Login
+      </RouterLink>
+
+      <RouterLink class="btn btn-success" to="/register">
+        Register
+      </RouterLink>
+      <button class="btn btn-danger " @click="logout">
+        Logout
+      </button>
+    </div>
+
+  </nav>
+
+  <router-view></router-view>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+/* Không cần CSS, tất cả dùng bootstrap */
 </style>

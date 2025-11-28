@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
     server: {
-        port: 3000,      // Đổi port tại đây
-        host: true       // Cho phép truy cập từ ngoài (tuỳ chọn)
+        port: 3000,
+        host: "127.0.0.1"
     }
 })

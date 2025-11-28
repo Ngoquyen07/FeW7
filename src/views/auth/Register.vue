@@ -1,0 +1,154 @@
+<script setup>
+import { ref } from "vue";
+import auth from "/src/api/auth/auth.ts";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const form = ref({
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+});
+
+const loading = ref(false);
+const message = ref("");
+const errors = ref({});
+
+async function register() {
+  loading.value = true;
+  message.value = "";
+  errors.value = {};
+
+  try {
+    const res = await auth.register(form.value);
+
+    if (res.status === 201) {
+      message.value = "Đăn rồi đấy ông cháu ơi!";
+      delay(3000);
+      router.push("/home");
+    } else {
+      message.value = "Ông cháu đăng xuất ra hộ phát rồi đăng ký nhé!" ;
+    }
+
+    form.value = {
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    };
+
+  } catch (error) {
+    if (error.response?.status === 422) {
+      errors.value = error.response.data.errors;
+    } else {
+      message.value = error.response?.data?.message ?? "Lỗi server!";
+    }
+  } finally {
+    loading.value = false;
+  }
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
+</script>
+
+<template>
+  <div class="container mt-5 d-flex justify-content-center" style="min-height: 85vh;">
+    <div class="w-100" style="max-width: 480px;">
+
+      <h2 class="text-center mb-4 fw-bold">
+        Chưa có tài khoản à? <br>
+        <span class="text-primary">Đăng ký đê!</span>
+      </h2>
+
+      <!-- THÔNG BÁO -->
+      <div v-if="message" class="alert alert-info text-center">
+        {{ message }}
+      </div>
+
+      <!-- FORM -->
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+
+          <form @submit.prevent="register">
+
+            <!-- Name -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Họ và tên</label>
+              <input
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors.name }"
+                  v-model="form.name"
+                  placeholder="Cho xin cái la me đê ..."
+              />
+              <div class="invalid-feedback" v-if="errors.name">
+                {{ errors.name[0] }}
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email</label>
+              <input
+                  type="email"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors.email }"
+                  v-model="form.email"
+                  placeholder="Nổ cái i mew ..."
+              />
+              <div class="invalid-feedback" v-if="errors.email">
+                {{ errors.email[0] }}
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Mật khẩu</label>
+              <input
+                  type="password"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors.password }"
+                  v-model="form.password"
+                  placeholder="Nổ mật khẩu lẹ ..."
+              />
+              <div class="invalid-feedback" v-if="errors.password">
+                {{ errors.password[0] }}
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Nhập lại mật khẩu</label>
+              <input
+                  type="password"
+                  class="form-control"
+                  :class="{ 'is-invalid': errors.password_confirmation }"
+                  v-model="form.password_confirmation"
+                  placeholder="Confirm lại phát ..."
+              />
+              <div class="invalid-feedback" v-if="errors.password_confirmation">
+                {{ errors.password_confirmation[0] }}
+              </div>
+            </div>
+
+            <!-- SUBMIT -->
+            <button
+                type="submit"
+                class="btn btn-primary w-100 py-2 fw-semibold"
+                :disabled="loading"
+            >
+              <span v-if="loading">Đang quay ...</span>
+              <span v-else>Đăng ký nẹ!</span>
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<style scoped>
+</style>
