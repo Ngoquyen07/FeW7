@@ -5,7 +5,7 @@ const taskApi = {
         return axiosClient.get("/api/tasks", { params }); // convert query  to string
     },
 
-    getById(id: number) {
+    getById(id: any) {
         return axiosClient.get(`/api/tasks/${id}`);
     },
 

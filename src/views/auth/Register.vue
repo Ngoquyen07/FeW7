@@ -23,13 +23,14 @@ async function register() {
     const res = await auth.register(form.value);
 
     if (res.status === 201) {
+      setTimeout(() => {
+        message.value = "Đợi ri đì rếc về hô me"; }, 500);
       message.value = "Đăn rồi đấy ông cháu ơi!";
-      delay(3000);
-      router.push("/home");
+      setTimeout(() => {
+        router.push("/home"); }, 2000);
     } else {
       message.value = "Ông cháu đăng xuất ra hộ phát rồi đăng ký nhé!" ;
     }
-
     form.value = {
       name: "",
       email: "",
@@ -57,9 +58,9 @@ async function register() {
     <div class="w-100" style="max-width: 480px;">
 
       <h2 class="text-center mb-4 fw-bold">
-        Chưa có tài khoản à? <br>
         <span class="text-primary">Đăng ký đê!</span>
       </h2>
+
 
       <!-- THÔNG BÁO -->
       <div v-if="message" class="alert alert-info text-center">
@@ -141,8 +142,12 @@ async function register() {
               <span v-if="loading">Đang quay ...</span>
               <span v-else>Đăng ký nẹ!</span>
             </button>
-
           </form>
+          <div class="text-center mb-3">
+            <RouterLink to="/login" class="small text-decoration-none">
+              ← Quay về đăng nhập
+            </RouterLink>
+          </div>
         </div>
       </div>
 

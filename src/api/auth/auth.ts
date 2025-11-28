@@ -2,8 +2,7 @@ import axiosClient from "./axios";
 const auth = {
     async getCSRFToken(){
         try{
-            const res = await axiosClient.get("/sanctum/csrf-cookie");
-            console.log("Token " , res);
+            return await axiosClient.get("/sanctum/csrf-cookie");
         }
         catch(error){
             console.log(error);

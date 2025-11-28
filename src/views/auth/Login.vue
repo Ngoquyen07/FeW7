@@ -19,11 +19,13 @@ async function login() {
     const res = await auth.login(form.value);
 
     if (res.status === 200 || res.status === 204) {
-      message.value = res.status;
+      message.value = "Đúng acc rồi đấy ông cháu";
+
+
       router.push("/home");
 
     } else {
-      message.value = res.status ;
+      message.value = "Sai thông tin ròi bố ạ!" ;
     }
 
     form.value = {
@@ -34,6 +36,7 @@ async function login() {
   } catch (error) {
     if (error.response?.status === 422) {
       errors.value = error.response.data.errors;
+      console.log(error.response);
     } else {
       message.value = error.response?.data?.message ?? "Lỗi server!";
     }
@@ -49,8 +52,8 @@ async function login() {
     <div class="w-100" style="max-width: 480px;">
 
       <h2 class="text-center mb-4 fw-bold">
-        Chưa có tài khoản à? <br>
-        <span class="text-primary">Đăng ký đê!</span>
+        Nóc in <br>
+<!--        <span class="text-primary">Đăng ký đê!</span>-->
       </h2>
 
       <!-- THÔNG BÁO -->
@@ -74,7 +77,10 @@ async function login() {
                   placeholder="Nổ cái i mew ..."
               />
               <div class="invalid-feedback" v-if="errors.email">
-                {{ errors.email[0] }}
+<!--                {{ errors.email[0] }}-->
+                Sai thông tin rồi bố ạ !
+                <br>
+                Check lại tài khoản đê .
               </div>
             </div>
 
@@ -87,6 +93,7 @@ async function login() {
                   :class="{ 'is-invalid': errors.password }"
                   v-model="form.password"
                   placeholder="Nổ mật khẩu lẹ ..."
+                  required
               />
               <div class="invalid-feedback" v-if="errors.password">
                 {{ errors.password[0] }}
@@ -103,6 +110,12 @@ async function login() {
               <span v-if="loading">Đang quay ...</span>
               <span v-else>Đăng nhập</span>
             </button>
+            <!-- LINK ĐI ĐĂNG KÝ -->
+            <div class="text-center mt-3">
+              <RouterLink to="/register" class="small text-decoration-none">
+                Chưa có tài khoản à ? Đăng ký đê !
+              </RouterLink>
+            </div>
 
           </form>
         </div>

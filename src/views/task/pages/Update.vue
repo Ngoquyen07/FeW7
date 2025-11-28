@@ -2,45 +2,62 @@
 import taskAPI from "../../../api/task/taskAPI.ts";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+
 const route = useRoute();
 const router = useRouter();
 
 const title = ref("");
 const status = ref("");
 const description = ref("");
+
 async function load() {
-  const res = await taskAPI.getById(parseInt(<string>route.params.id));
-  title.value = res?.data?.data?.title ;
+  const id = Number(route.params.id);
+
+  if (!id) {
+    alert("ID không hợp lệ!");
+    router.back();
+    return;
+  }
+
+  const res = await taskAPI.getById(id);
+
+  title.value = res?.data?.data?.title;
   status.value = res?.data?.data?.status;
-  description.value = res?.data?.data?.description ;
+  description.value = res?.data?.data?.description;
 }
+
 async function update() {
   if (!title.value || !status.value) {
     alert("Vui lòng nhập đầy đủ thông tin.");
     return;
   }
 
-  const res = await taskAPI.update(parseInt(<string>route.params.id), {
+  const id = Number(route.params.id);
+
+  const res = await taskAPI.update(id, {
     title: title.value,
     description: description.value,
     status: status.value,
   });
+
   console.log(res);
   router.push("/home");
 }
+
 onMounted(load);
 </script>
 
 <template>
   <div class="container mt-4">
-    <div class="card shadow-sm">
+    <div class="card shadow">
       <div class="card-body">
 
-        <h4 class="mb-3">Chỉnh sửa Task</h4>
+        <!-- Header -->
+        <h4 class="mb-4 fw-bold text-primary">Chỉnh sửa Task</h4>
 
         <!-- Title -->
         <div class="mb-3">
-          <label class="form-label">Tiêu đề</label>
+          <label class="form-label fw-semibold">Tiêu đề</label>
           <input
               v-model="title"
               type="text"
@@ -51,18 +68,18 @@ onMounted(load);
 
         <!-- Description -->
         <div class="mb-3">
-          <label class="form-label">Mô tả</label>
+          <label class="form-label fw-semibold">Mô tả</label>
           <textarea
               v-model="description"
               class="form-control"
-              rows="3"
-              placeholder="Nhập mô tả (tuỳ chọn)"
+              rows="4"
+              placeholder="Nhập mô tả..."
           ></textarea>
         </div>
 
         <!-- Status -->
         <div class="mb-3">
-          <label class="form-label">Trạng thái</label>
+          <label class="form-label fw-semibold">Trạng thái</label>
           <select v-model="status" class="form-select">
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -70,13 +87,13 @@ onMounted(load);
         </div>
 
         <!-- Buttons -->
-        <div class="d-flex gap-2 mt-3">
-          <button class="btn btn-primary" @click="update">
-            Lưu thay đổi
+        <div class="d-flex gap-2 mt-4">
+          <button class="btn btn-primary px-4" @click="update">
+            <i class="bi bi-save me-1"></i> Lưu thay đổi
           </button>
 
-          <button class="btn btn-secondary" @click="router.back()">
-            Quay lại
+          <button class="btn btn-outline-secondary px-4" @click="router.back()">
+            <i class="bi bi-arrow-left me-1"></i> Quay lại
           </button>
         </div>
 
@@ -84,8 +101,3 @@ onMounted(load);
     </div>
   </div>
 </template>
-
-
-<style scoped>
-
-</style>

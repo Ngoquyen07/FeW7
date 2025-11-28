@@ -8,7 +8,7 @@ const router = useRouter();
 const form = ref({
   title: "",
   description: "",
-  status: "active", // hoặc "todo" tuỳ bạn
+  status: "active",
 });
 
 const errors = ref<any>({});
@@ -25,8 +25,7 @@ async function handleSubmit() {
 
     // Nếu backend trả 201 / 200 đều ok
     if (res.status === 201 || res.status === 200) {
-      message.value = "Tạo task thành công! Đang chuyển về danh sách...";
-      // Đợi 1 chút rồi quay lại list
+      message.value = "Thêm mới rồi nhé ông cháu";
       setTimeout(() => {
         router.push("/home");
       }, 1500);
