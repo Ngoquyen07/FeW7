@@ -7,6 +7,8 @@ import Register from "../views/auth/Register.vue";
 import Login from "../views/auth/Login.vue";
 import Profile from "../views/info/Profile.vue";
 import {user} from "../stores/auth.ts";
+import ForgotPassword from "../views/fogotpw/ForgotPassword.vue";
+import ResetPassword from "../views/fogotpw/ResetPassword.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -47,6 +49,16 @@ const router = createRouter({
             path:"/profile",
             name :"profile",
             component : Profile,
+        },
+        {
+            path:"/forgot-password",
+            name :"forgot-password",
+            component : ForgotPassword,
+        },
+        {
+            path:"/password-reset/:token",
+            name :"password-reset",
+            component : ResetPassword,
         }
     ]
 });
@@ -70,17 +82,16 @@ router.beforeEach(async (to, _from, next) => {
 
     // CHƯA LOGIN
     if (!user.value) {
-        if (to.name === "login" || to.name === "register") {
+        if (to.name === "login" || to.name === "register" || to.name === "forgot-password" || to.name === "password-reset" ) {
             return next();
         }
         return next("/login");
     }
 
     // ĐÃ LOGIN
-    if (to.name === "login" || to.name === "register") {
+    if (to.name === "login" || to.name === "register" || to.name === "forgot-password" || to.name === "password-reset" ) {
         return next("/");
     }
-
     next();
 
 });

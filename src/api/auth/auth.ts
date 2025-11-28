@@ -1,4 +1,5 @@
 import axiosClient from "./axios";
+
 const auth = {
     async getCSRFToken(){
         try{
@@ -23,7 +24,27 @@ const auth = {
     async getUser(){
         await auth.getCSRFToken();
         return await axiosClient.get("/api/user");
-    }
+    },
+    async forgotPassword(email: string) {
+        try {
+            await this.getCSRFToken();
+            return await axiosClient.post("/forgot-password", {
+                email: email
+            });
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    },
 
+    async resetPassword(data : any){
+        try{
+            await auth.getCSRFToken();
+            return await axiosClient.post("/reset-password" , data);
+        }
+        catch (err){
+            console.log(err);
+        }
+    }
 }
 export default auth;
