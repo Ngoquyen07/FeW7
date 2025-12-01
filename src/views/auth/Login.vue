@@ -2,6 +2,11 @@
 import { ref } from "vue";
 import auth from "/src/api/auth/auth.ts";
 import { useRouter } from "vue-router";
+import Notice from "../../components/auth/general/Notice.vue";
+import ToForgot from "../../components/auth/login/ToForgot.vue";
+import SubmitBtn from "../../components/auth/general/SubmitBtn.vue";
+import Header from "../../components/auth/general/Header.vue";
+import ToRegister from "../../components/auth/login/ToRegister.vue";
 const router = useRouter();
 const form = ref({
   email: "",
@@ -51,15 +56,10 @@ async function login() {
   <div class="container mt-5 d-flex justify-content-center" style="min-height: 85vh;">
     <div class="w-100" style="max-width: 480px;">
 
-      <h2 class="text-center mb-4 fw-bold">
-        Nóc in <br>
-<!--        <span class="text-primary">Đăng ký đê!</span>-->
-      </h2>
+      <Header header="Đăng nhập đê"/>
 
       <!-- THÔNG BÁO -->
-      <div v-if="message" class="alert alert-info text-center">
-        {{ message }}
-      </div>
+      <Notice :message="message"></Notice>
 
       <!-- FORM -->
       <div class="card shadow-sm border-0 rounded-3">
@@ -100,29 +100,11 @@ async function login() {
               </div>
             </div>
             <!-- 🔥 Link quên mật khẩu -->
-            <div class="text-end mt-1">
-              <RouterLink to="/forgot-password" class="small text-decoration-none">
-                Quên mật khẩu?
-              </RouterLink>
-            </div>
-
-
+            <ToForgot/>
             <!-- SUBMIT -->
-            <button
-                type="submit"
-                class="btn btn-primary w-100 py-2 fw-semibold"
-                :disabled="loading"
-            >
-              <span v-if="loading">Đang quay ...</span>
-              <span v-else>Đăng nhập</span>
-            </button>
+            <SubmitBtn :loading="loading" btnName="Đăng nhập nuôn"/>
             <!-- LINK ĐI ĐĂNG KÝ -->
-            <div class="text-center mt-3">
-              <RouterLink to="/register" class="small text-decoration-none">
-                Chưa có tài khoản à ? Đăng ký đê !
-              </RouterLink>
-            </div>
-
+            <ToRegister/>
           </form>
         </div>
       </div>

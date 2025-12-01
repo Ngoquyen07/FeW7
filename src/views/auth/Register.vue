@@ -2,6 +2,10 @@
 import { ref } from "vue";
 import auth from "/src/api/auth/auth.ts";
 import { useRouter } from "vue-router";
+import ButtonBackToLogin from "../../components/auth/general/ButtonBackToLogin.vue";
+import SubmitBtn from "../../components/auth/general/SubmitBtn.vue";
+import Notice from "../../components/auth/general/Notice.vue";
+import Header from "../../components/auth/general/Header.vue";
 const router = useRouter();
 const form = ref({
   name: "",
@@ -57,16 +61,9 @@ async function register() {
   <div class="container mt-5 d-flex justify-content-center" style="min-height: 85vh;">
     <div class="w-100" style="max-width: 480px;">
 
-      <h2 class="text-center mb-4 fw-bold">
-        <span class="text-primary">Đăng ký đê!</span>
-      </h2>
-
-
+      <Header header="Đăng ký đê"/>
       <!-- THÔNG BÁO -->
-      <div v-if="message" class="alert alert-info text-center">
-        {{ message }}
-      </div>
-
+      <Notice :message="message"></Notice>
       <!-- FORM -->
       <div class="card shadow-sm border-0 rounded-3">
         <div class="card-body p-4">
@@ -134,20 +131,9 @@ async function register() {
             </div>
 
             <!-- SUBMIT -->
-            <button
-                type="submit"
-                class="btn btn-primary w-100 py-2 fw-semibold"
-                :disabled="loading"
-            >
-              <span v-if="loading">Đang quay ...</span>
-              <span v-else>Đăng ký nẹ!</span>
-            </button>
+            <SubmitBtn :loading="loading" btnName="Đăng kí nuôn"/>
           </form>
-          <div class="text-center mb-3">
-            <RouterLink to="/login" class="small text-decoration-none">
-              ← Quay về đăng nhập
-            </RouterLink>
-          </div>
+          <ButtonBackToLogin/>
         </div>
       </div>
 

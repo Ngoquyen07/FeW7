@@ -7,7 +7,6 @@ import {user} from "./stores/auth.ts";
 
 const app = createApp(App);
 
-
 app.provide("user", user);
 app.use(router);
 app.mount("#app");

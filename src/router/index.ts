@@ -9,6 +9,7 @@ import Profile from "../views/info/Profile.vue";
 import {user} from "../stores/auth.ts";
 import ForgotPassword from "../views/fogotpw/ForgotPassword.vue";
 import ResetPassword from "../views/fogotpw/ResetPassword.vue";
+import ErrNotFound from "../views/errors/ErrNotFound.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -59,6 +60,11 @@ const router = createRouter({
             path:"/password-reset/:token",
             name :"password-reset",
             component : ResetPassword,
+        },
+        {
+            path: "/:pathMatch(.*)*",
+            name:"/404",
+            component: ErrNotFound,
         }
     ]
 });

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import auth from "../../api/auth/auth.ts";
+import ButtonBackToLogin from "../../components/auth/general/ButtonBackToLogin.vue";
+import FgHeader from "../../components/auth/forgot/FgHeader.vue";
+import BtnGetMail from "../../components/auth/forgot/BtnGetMail.vue";
 
 const email = ref("");
 const message = ref("");
@@ -41,9 +44,8 @@ async function forgotPassword() {
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
     <div class="card shadow p-3 card-forgot">
 
-      <!-- Header giữ nguyên -->
-      <h2 class="text-center mb-0">Có cái mật khẩu cũng không giữ được</h2>
-      <h1 class="text-center title-red mb-4">SAO GIỮ ĐƯỢC EM</h1>
+      <!-- FgHeader -->
+        <FgHeader/>
 
       <!-- Thông báo -->
       <div v-if="message" :class="`alert alert-${messageType}`">
@@ -62,22 +64,9 @@ async function forgotPassword() {
       </div>
 
       <!-- Button gửi -->
-      <button
-          class="btn btn-primary w-100 py-2 fw-semibold"
-          @click="forgotPassword"
-          :disabled="loading"
-      >
-        <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-        Gửi liên kết đặt lại mật khẩu
-      </button>
-
+          <BtnGetMail :loading="loading" :forgotPassword="forgotPassword" />
       <!-- Back -->
-      <div class="text-center mt-3">
-        <RouterLink to="/login" class="small text-decoration-none">
-          ← Quay lại đăng nhập
-        </RouterLink>
-      </div>
-
+      <ButtonBackToLogin/>
     </div>
   </div>
 </template>
@@ -88,13 +77,6 @@ async function forgotPassword() {
   width: 480px !important;      /* tăng từ 380px → 480px */
   max-width: 95%;               /* responsive */
   border-radius: 12px;
-}
-
-/* Dòng màu đỏ */
-.title-red {
-  color: #dc3545;               /* đỏ Bootstrap */
-  font-weight: bold;
-  letter-spacing: 1px;
 }
 
 /* Tăng font header cho đẹp */

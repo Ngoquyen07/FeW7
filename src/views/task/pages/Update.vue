@@ -2,6 +2,7 @@
 import taskAPI from "../../../api/task/taskAPI.ts";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import LoadCircle from "../../../components/task/general/LoadCircle.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -9,8 +10,10 @@ const router = useRouter();
 const title = ref("");
 const status = ref("");
 const description = ref("");
+const loading = ref(false);
 
 async function load() {
+  loading.value = true;
   const id = Number(route.params.id);
 
   if (!id) {
@@ -18,12 +21,21 @@ async function load() {
     router.back();
     return;
   }
+  try{
+    const res = await taskAPI.getById(id);
 
-  const res = await taskAPI.getById(id);
-
-  title.value = res?.data?.data?.title;
-  status.value = res?.data?.data?.status;
-  description.value = res?.data?.data?.description;
+    title.value = res?.data?.data?.title;
+    status.value = res?.data?.data?.status;
+    description.value = res?.data?.data?.description;
+  }
+  catch (error : any) {
+    if(error.response?.status === 404){
+      router.push("/404");
+    }
+  }
+  finally {
+    loading.value = false;
+  }
 }
 
 async function update() {
@@ -52,9 +64,9 @@ onMounted(load);
     <div class="card shadow">
       <div class="card-body">
 
-        <!-- Header -->
+        <!-- FgHeader -->
         <h4 class="mb-4 fw-bold text-primary">Chỉnh sửa Task</h4>
-
+        <LoadCircle :loading="loading"/>
         <!-- Title -->
         <div class="mb-3">
           <label class="form-label fw-semibold">Tiêu đề</label>

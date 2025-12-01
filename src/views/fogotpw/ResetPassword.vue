@@ -2,6 +2,8 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import auth from "../../api/auth/auth.ts";
+import ButtonBackToLogin from "../../components/auth/general/ButtonBackToLogin.vue";
+import BtnReset from "../../components/auth/resetPw/BtnReset.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -103,21 +105,9 @@ async function resetPassword() {
       </div>
 
       <!-- Reset Button -->
-      <button
-          class="btn btn-primary w-100 btn-lg fw-semibold"
-          @click="resetPassword"
-          :disabled="loading"
-      >
-        <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-        Cập nhật mật khẩu
-      </button>
-
+      <BtnReset :loading="loading"  :resetPassword="resetPassword" />
       <!-- Back -->
-      <div class="text-center mt-3">
-        <RouterLink to="/login" class="text-decoration-none small">
-          ← Quay lại đăng nhập
-        </RouterLink>
-      </div>
+      <ButtonBackToLogin/>
     </div>
   </div>
 </template>

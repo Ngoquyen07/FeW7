@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import taskAPI from "../../../api/task/taskAPI.ts";
+import Notice from "../../../components/auth/general/Notice.vue";
 
 const router = useRouter();
 
@@ -56,9 +57,10 @@ function goBack() {
         <h4 class="mb-3">Tạo task mới</h4>
 
         <!-- Thông báo -->
-        <div v-if="message" class="alert alert-info py-2">
-          {{ message }}
-        </div>
+<!--        <div v-if="message" class="alert alert-info py-2">-->
+<!--          {{ message }}-->
+<!--        </div>-->
+        <Notice :message="message" />
 
         <form @submit.prevent="handleSubmit">
           <!-- Title -->
