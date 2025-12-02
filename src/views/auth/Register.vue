@@ -28,19 +28,19 @@ async function register() {
 
     if (res.status === 201) {
       setTimeout(() => {
-        message.value = "Redirect to home"; }, 500);
+        message.value = "Wait for redirecting to home!"; }, 500);
       message.value = "Register success!";
       setTimeout(() => {
-        router.push("/home"); }, 2000);
+        router.push("/home"); }, 1000);
     } else {
       message.value = "Something went wrong, please try again" ;
     }
-    form.value = {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-    };
+    // form.value = {
+    //   name: "",
+    //   email: "",
+    //   password: "",
+    //   password_confirmation: "",
+    // };
 
   } catch (error) {
     if (error.response?.status === 422) {

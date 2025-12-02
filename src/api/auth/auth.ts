@@ -38,13 +38,9 @@ const auth = {
     },
 
     async resetPassword(data : any){
-        try{
-            await auth.getCSRFToken();
-            return await axiosClient.post("/reset-password" , data);
-        }
-        catch (err){
-            console.log(err);
-        }
+        await auth.getCSRFToken();
+        return  await axiosClient.post("/reset-password" , data);
+
     }
 }
 export default auth;

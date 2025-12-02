@@ -5,7 +5,7 @@
 <template>
   <div class="text-center mt-3">
     <RouterLink to="/login" class="small text-decoration-none">
-      ← Quay lại đăng nhập
+      ← Back to Login
     </RouterLink>
   </div>
 </template>

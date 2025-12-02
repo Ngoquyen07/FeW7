@@ -13,7 +13,7 @@ const props = defineProps<{
         class="form-control"
         :class="{ 'is-invalid': props.errors.password }"
         v-model="password"
-        placeholder="Nổ mật khẩu lẹ ..."
+        placeholder="Nhập mật khẩu"
     />
     <div class="invalid-feedback" v-if="props.errors.password">
       {{ props.errors.password[0] }}

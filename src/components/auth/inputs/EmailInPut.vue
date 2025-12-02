@@ -14,14 +14,13 @@
         class="form-control"
         :class="{ 'is-invalid': props.errors.email }"
         v-model="email"
-        placeholder="Nổ cái i mew ..."
+        placeholder="Nhập email..."
     />
     <div class="invalid-feedback" v-if="props.errors.email">
       <!--                {{ errors.email[0] }}-->
       <span v-if="props.parent === 'login'">
-        Sai thông tin rồi bố ạ !
+        {{ props.errors.email[0] }}
       <br>
-        Check lại tài khoản đê .
       </span>
       <span v-else-if="props.parent === 'register'">
         {{ props.errors.email[0] }}

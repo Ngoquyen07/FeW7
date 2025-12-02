@@ -13,7 +13,7 @@ const loading = ref(false);
 async function forgotPassword() {
   if (!email.value) {
     messageType.value = "danger";
-    message.value = "Email không được bỏ trống!";
+    message.value = "Please enter valid email";
     return;
   }
 
@@ -24,11 +24,10 @@ async function forgotPassword() {
     const res = await auth.forgotPassword(email.value);
     console.log(res);
     messageType.value = "success";
-    message.value = "Đã gửi email đặt lại mật khẩu! Vui lòng kiểm tra hộp thư.";
-
+    message.value = "Email has been sent. Please check your inbox!";
   } catch (err: any) {
     messageType.value = "danger";
-    message.value = err.response?.data?.message ?? "Có lỗi xảy ra!";
+    message.value = err.response?.data?.message ?? "Something went wrong!";
   }
 
   loading.value = false;
@@ -54,11 +53,11 @@ async function forgotPassword() {
 
       <!-- Form Email -->
       <div class="mb-3">
-        <label class="form-label fw-semibold">Thồi nhập i meo vào đây</label>
+        <label class="form-label fw-semibold">Email</label>
         <input
             type="email"
             class="form-control"
-            placeholder="Nhập email ..."
+            placeholder="Enter your email ..."
             v-model="email"
         />
       </div>

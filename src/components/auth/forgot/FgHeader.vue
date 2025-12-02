@@ -3,14 +3,26 @@
 </script>
 
 <template>
-  <h2 class="text-center mb-0">Có cái mật khẩu cũng không giữ được</h2>
-  <h1 class="text-center title-red mb-4">SAO GIỮ ĐƯỢC EM</h1>
+  <div class="text-center mb-4">
+    <h2
+        class="fw-bold mb-2"
+        style="
+      font-size: 2rem;
+      background: linear-gradient(90deg, #4e54c8, #8f94fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    "
+    >
+      Forgot your password?
+    </h2>
+
+    <p class="text-muted" style="font-size: 0.95rem;">
+      Enter your email and we'll send you a reset link.
+    </p>
+  </div>
+
+
 </template>
 
 <style scoped>
-.title-red {
-  color: #dc3545;               /* đỏ Bootstrap */
-  font-weight: bold;
-  letter-spacing: 1px;
-}
 </style>

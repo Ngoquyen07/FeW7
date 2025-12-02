@@ -5,7 +5,7 @@
 <template>
   <div class="text-center mt-3">
     <RouterLink to="/register" class="small text-decoration-none">
-      Chưa có tài khoản à ? Đăng ký đê !
+      Have an account? Register
     </RouterLink>
   </div>
 </template>

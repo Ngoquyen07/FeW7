@@ -13,7 +13,7 @@
         class="form-control"
         :class="{ 'is-invalid': props.errors.password_confirmation }"
         v-model="password_confirmation"
-        placeholder="Confirm lại phát ..."
+        placeholder="Confirm  ..."
     />
     <div class="invalid-feedback" v-if="props.errors.password_confirmation">
       {{ props.errors.password_confirmation[0] }}

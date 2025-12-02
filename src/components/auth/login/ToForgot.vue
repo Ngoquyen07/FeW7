@@ -5,7 +5,7 @@
 <template>
   <div class="text-end mt-1">
     <RouterLink to="/forgot-password" class="small text-decoration-none">
-      Quên mật khẩu?
+      Forgot Password ?
     </RouterLink>
   </div>
 </template>

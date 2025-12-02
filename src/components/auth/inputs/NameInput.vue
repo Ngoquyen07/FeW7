@@ -13,7 +13,7 @@
         class="form-control"
         :class="{ 'is-invalid': props.errors.name }"
         v-model="name"
-        placeholder="Cho xin cái la me đê ..."
+        placeholder="Nhập tên ..."
     />
     <div class="invalid-feedback" v-if="props.errors.name">
       {{ props.errors.name[0] }}

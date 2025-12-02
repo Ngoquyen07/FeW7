@@ -12,7 +12,7 @@
       :disabled="props.loading"
   >
     <span v-if="props.loading" class="spinner-border spinner-border-sm me-2"></span>
-    Xin lại mật khẩu
+    Get mail
   </button>
 </template>
 
