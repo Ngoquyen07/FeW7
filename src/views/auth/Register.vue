@@ -6,6 +6,10 @@ import ButtonBackToLogin from "../../components/auth/general/ButtonBackToLogin.v
 import SubmitBtn from "../../components/auth/general/SubmitBtn.vue";
 import Notice from "../../components/auth/general/Notice.vue";
 import Header from "../../components/auth/general/Header.vue";
+import EmailInPut from "../../components/auth/inputs/EmailInPut.vue";
+import PasswordInput from "../../components/auth/inputs/PasswordInput.vue";
+import NameInput from "../../components/auth/inputs/NameInput.vue";
+import CFPasswordInput from "../../components/auth/inputs/CFPasswordInput.vue";
 const router = useRouter();
 const form = ref({
   name: "",
@@ -51,9 +55,6 @@ async function register() {
   } finally {
     loading.value = false;
   }
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 }
 </script>
 
@@ -71,64 +72,16 @@ async function register() {
           <form @submit.prevent="register">
 
             <!-- Name -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Họ và tên</label>
-              <input
-                  type="text"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.name }"
-                  v-model="form.name"
-                  placeholder="Cho xin cái la me đê ..."
-              />
-              <div class="invalid-feedback" v-if="errors.name">
-                {{ errors.name[0] }}
-              </div>
-            </div>
+            <NameInput :errors="errors" v-model:name="form.name" />
 
             <!-- Email -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Email</label>
-              <input
-                  type="email"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.email }"
-                  v-model="form.email"
-                  placeholder="Nổ cái i mew ..."
-              />
-              <div class="invalid-feedback" v-if="errors.email">
-                {{ errors.email[0] }}
-              </div>
-            </div>
+            <EmailInPut :errors="errors" parent="register" v-model:email="form.email" />
 
             <!-- Password -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Mật khẩu</label>
-              <input
-                  type="password"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.password }"
-                  v-model="form.password"
-                  placeholder="Nổ mật khẩu lẹ ..."
-              />
-              <div class="invalid-feedback" v-if="errors.password">
-                {{ errors.password[0] }}
-              </div>
-            </div>
+            <PasswordInput errors="errors" v-model:password="form.password" />
 
             <!-- Confirm Password -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Nhập lại mật khẩu</label>
-              <input
-                  type="password"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.password_confirmation }"
-                  v-model="form.password_confirmation"
-                  placeholder="Confirm lại phát ..."
-              />
-              <div class="invalid-feedback" v-if="errors.password_confirmation">
-                {{ errors.password_confirmation[0] }}
-              </div>
-            </div>
+            <CFPasswordInput :errors="errors" v-model:password_confirmation="form.password_confirmation" />
 
             <!-- SUBMIT -->
             <SubmitBtn :loading="loading" btnName="Đăng kí nuôn"/>
@@ -136,7 +89,6 @@ async function register() {
           <ButtonBackToLogin/>
         </div>
       </div>
-
     </div>
   </div>
 </template>

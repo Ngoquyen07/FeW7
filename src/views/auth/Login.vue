@@ -7,6 +7,8 @@ import ToForgot from "../../components/auth/login/ToForgot.vue";
 import SubmitBtn from "../../components/auth/general/SubmitBtn.vue";
 import Header from "../../components/auth/general/Header.vue";
 import ToRegister from "../../components/auth/login/ToRegister.vue";
+import EmailInPut from "../../components/auth/inputs/EmailInPut.vue";
+import PasswordInput from "../../components/auth/inputs/PasswordInput.vue";
 const router = useRouter();
 const form = ref({
   email: "",
@@ -64,41 +66,10 @@ async function login() {
       <!-- FORM -->
       <div class="card shadow-sm border-0 rounded-3">
         <div class="card-body p-4">
-
           <form @submit.prevent="login">
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Email</label>
-              <input
-                  type="email"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.email }"
-                  v-model="form.email"
-                  placeholder="Nổ cái i mew ..."
-              />
-              <div class="invalid-feedback" v-if="errors.email">
-<!--                {{ errors.email[0] }}-->
-                Sai thông tin rồi bố ạ !
-                <br>
-                Check lại tài khoản đê .
-              </div>
-            </div>
-
+            <EmailInPut v-model:email="form.email" :errors="errors" parent="login" />
             <!-- Password -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Mật khẩu</label>
-              <input
-                  type="password"
-                  class="form-control"
-                  :class="{ 'is-invalid': errors.password }"
-                  v-model="form.password"
-                  placeholder="Nổ mật khẩu lẹ ..."
-                  required
-              />
-              <div class="invalid-feedback" v-if="errors.password">
-                {{ errors.password[0] }}
-              </div>
-            </div>
+            <PasswordInput errors="errors" v-model:password="form.password" />
             <!-- 🔥 Link quên mật khẩu -->
             <ToForgot/>
             <!-- SUBMIT -->
@@ -108,7 +79,6 @@ async function login() {
           </form>
         </div>
       </div>
-
     </div>
   </div>
 

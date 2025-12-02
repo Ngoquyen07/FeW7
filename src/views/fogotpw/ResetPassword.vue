@@ -4,6 +4,10 @@ import { useRoute, useRouter } from "vue-router";
 import auth from "../../api/auth/auth.ts";
 import ButtonBackToLogin from "../../components/auth/general/ButtonBackToLogin.vue";
 import BtnReset from "../../components/auth/resetPw/BtnReset.vue";
+import EmailInPut from "../../components/auth/inputs/EmailInPut.vue";
+import PasswordInput from "../../components/auth/inputs/PasswordInput.vue";
+import CFPasswordInput from "../../components/auth/inputs/CFPasswordInput.vue";
+import Notice from "../../components/auth/general/Notice.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -67,42 +71,16 @@ async function resetPassword() {
       </p>
 
       <!-- Message -->
-      <div v-if="message" :class="`alert alert-${messageType} text-center mb-3`">
-        {{ message }}
-      </div>
+      <Notice :message="message" />
 
       <!-- Email -->
-      <div class="mb-3">
-        <label class="form-label fw-semibold">Email</label>
-        <input
-            type="email"
-            class="form-control form-control-lg"
-            v-model="email"
-            placeholder="Nhập email ..."
-        />
-      </div>
+      <EmailInPut errors="" parent="register" v-model:email="email" />
 
       <!-- Password -->
-      <div class="mb-3">
-        <label class="form-label fw-semibold">Mật khẩu mới</label>
-        <input
-            type="password"
-            class="form-control form-control-lg"
-            v-model="password"
-            placeholder="Nhập mật khẩu mới ..."
-        />
-      </div>
+      <PasswordInput errors="" v-model:password="password" />
 
       <!-- Confirm Password -->
-      <div class="mb-4">
-        <label class="form-label fw-semibold">Nhập lại mật khẩu</label>
-        <input
-            type="password"
-            class="form-control form-control-lg"
-            v-model="password_confirmation"
-            placeholder="Nhập lại mật khẩu ..."
-        />
-      </div>
+      <CFPasswordInput errors="" v-model:password_confirmation="password_confirmation" />
 
       <!-- Reset Button -->
       <BtnReset :loading="loading"  :resetPassword="resetPassword" />
@@ -126,14 +104,6 @@ async function resetPassword() {
   animation: fadeIn .3s ease-in-out;
 }
 
-.form-control-lg {
-  padding: 10px 14px;
-  border-radius: 10px;
-}
-
-.btn-lg {
-  padding: 10px;
-}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
