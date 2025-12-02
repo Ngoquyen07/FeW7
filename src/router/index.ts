@@ -71,7 +71,7 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
     console.log("Check trước khi điều hướng" , user.value);
     try {
-        // lấy thử thôi giá trị vẫn có thể là null . Nếu chưa login
+        // lấy thử thôi giá trị vẫn có thể là null nếu chưa login
         if(!user.value){
             console.log("Gửi request lấy lại user từ serve")
             user.value = await (await auth.getUser()).data;

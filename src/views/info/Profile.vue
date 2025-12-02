@@ -83,16 +83,20 @@ const saveChanges = async () => {
     isSaving.value = false;
   }
 };
-
-// Hàm hủy bỏ thay đổi (Reset về ban đầu)
-const cancelChanges = () => {
-  if (user?.value) {
-    draftName.value = user.value.name;
-    draftAvatarPreview.value = user.value.imgurl || null;
-    selectedFile.value = null;
-    if (fileInput.value) fileInput.value.value = ''; // Reset input file
+const clickImage = () => {
+  if (user?.value?.imgurl) {
+    window.open(user.value.imgurl, "_blank");
   }
-};
+}
+// Hàm hủy bỏ thay đổi (Reset về ban đầu)
+// const cancelChanges = () => {
+//   if (user?.value) {
+//     draftName.value = user.value.name;
+//     draftAvatarPreview.value = user.value.imgurl || null;
+//     selectedFile.value = null;
+//     if (fileInput.value) fileInput.value.value = ''; // Reset input file
+//   }
+// };
 </script>
 
 <template>
@@ -115,6 +119,7 @@ const cancelChanges = () => {
                       alt="Avatar"
                       class="rounded-circle shadow-sm object-fit-cover"
                       style="width: 120px; height: 120px;"
+                      @click="clickImage"
                   >
                   <div
                       v-else
@@ -131,7 +136,7 @@ const cancelChanges = () => {
                       @click="triggerSelectFile"
                       title="Đổi ảnh"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill text-primary" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  class="bi bi-camera-fill text-primary" viewBox="0 0 16 16">
                       <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
                       <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
                     </svg>
@@ -173,14 +178,21 @@ const cancelChanges = () => {
               <hr class="my-4">
 
               <div class="d-flex justify-content-end gap-2">
-                <button
-                    type="button"
+                <RouterLink
                     class="btn btn-secondary"
-                    @click="cancelChanges"
-                    :disabled="isSaving"
+                    type="button"
+                    to="/"
                 >
-                  Hủy bỏ
-                </button>
+                  Quay lại
+                </RouterLink>
+<!--                <button-->
+<!--                    type="button"-->
+<!--                    class="btn btn-secondary"-->
+<!--                    @click="cancelChanges"-->
+<!--                    :disabled="isSaving"-->
+<!--                >-->
+<!--                  Hủy bỏ-->
+<!--                </button>-->
 
                 <button
                     type="submit"

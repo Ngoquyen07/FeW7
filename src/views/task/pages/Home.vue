@@ -8,7 +8,7 @@
     <div class="card shadow-sm">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="mb-0">Danh sách Task</h4>
+          <h4 class="mb-0">Danh sách công việc</h4>
           <button class="btn btn-primary" @click="goCreate">
             + Thêm Task
           </button>

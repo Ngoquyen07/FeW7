@@ -58,56 +58,63 @@ async function update() {
 
 onMounted(load);
 </script>
-
 <template>
   <div class="container mt-4">
     <div class="card shadow">
       <div class="card-body">
 
-        <!-- FgHeader -->
         <h4 class="mb-4 fw-bold text-primary">Chỉnh sửa Task</h4>
-        <LoadCircle :loading="loading"/>
-        <!-- Title -->
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Tiêu đề</label>
-          <input
-              v-model="title"
-              type="text"
-              class="form-control"
-              readonly
-          />
-        </div>
 
-        <!-- Description -->
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Mô tả</label>
-          <textarea
-              v-model="description"
-              class="form-control"
-              rows="4"
-              placeholder="Nhập mô tả..."
-          ></textarea>
-        </div>
+        <!-- Loading -->
+        <LoadCircle :loading="loading" />
 
-        <!-- Status -->
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Trạng thái</label>
-          <select v-model="status" class="form-select">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
+        <!-- FORM START -->
+        <form @submit.prevent="update">
 
-        <!-- Buttons -->
-        <div class="d-flex gap-2 mt-4">
-          <button class="btn btn-primary px-4" @click="update">
-            <i class="bi bi-save me-1"></i> Lưu thay đổi
-          </button>
+          <!-- Title -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Tiêu đề</label>
+            <input
+                v-model="title"
+                type="text"
+                class="form-control"
+                readonly
+            />
+          </div>
 
-          <button class="btn btn-outline-secondary px-4" @click="router.back()">
-            <i class="bi bi-arrow-left me-1"></i> Quay lại
-          </button>
-        </div>
+          <!-- Description -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Mô tả</label>
+            <textarea
+                v-model="description"
+                class="form-control"
+                rows="4"
+                placeholder="Nhập mô tả..."
+                required
+            ></textarea>
+          </div>
+
+          <!-- Status -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Trạng thái</label>
+            <select v-model="status" class="form-select">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="bi bi-save me-1"></i> Lưu thay đổi
+            </button>
+
+            <button type="button" class="btn btn-outline-secondary px-4" @click="router.back()">
+              <i class="bi bi-arrow-left me-1"></i> Quay lại
+            </button>
+          </div>
+
+        </form>
 
       </div>
     </div>

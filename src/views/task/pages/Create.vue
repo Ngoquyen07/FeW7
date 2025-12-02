@@ -38,7 +38,7 @@ async function handleSubmit() {
       message.value = "Dữ liệu chưa hợp lệ, kiểm tra lại giúp nhé!";
     } else {
       console.error(e);
-      message.value = "Có lỗi xảy ra, thử lại sau!";
+      message.value = e.response.data.message;
     }
   } finally {
     loading.value = false;
