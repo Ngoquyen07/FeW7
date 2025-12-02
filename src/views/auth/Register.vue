@@ -28,12 +28,12 @@ async function register() {
 
     if (res.status === 201) {
       setTimeout(() => {
-        message.value = "Đợi ri đì rếc về hô me"; }, 500);
-      message.value = "Đăn rồi đấy ông cháu ơi!";
+        message.value = "Redirect to home"; }, 500);
+      message.value = "Register success!";
       setTimeout(() => {
         router.push("/home"); }, 2000);
     } else {
-      message.value = "Ông cháu đăng xuất ra hộ phát rồi đăng ký nhé!" ;
+      message.value = "Something went wrong, please try again" ;
     }
     form.value = {
       name: "",
@@ -46,7 +46,7 @@ async function register() {
     if (error.response?.status === 422) {
       errors.value = error.response.data.errors;
     } else {
-      message.value = error.response?.data?.message ?? "Lỗi server!";
+      message.value = error.response?.data?.message ?? "Server Error!";
     }
   } finally {
     loading.value = false;
@@ -61,7 +61,7 @@ async function register() {
   <div class="container mt-5 d-flex justify-content-center" style="min-height: 85vh;">
     <div class="w-100" style="max-width: 480px;">
 
-      <Header header="Đăng ký đê"/>
+      <Header header="Register"/>
       <!-- THÔNG BÁO -->
       <Notice :message="message"></Notice>
       <!-- FORM -->
@@ -72,13 +72,13 @@ async function register() {
 
             <!-- Name -->
             <div class="mb-3">
-              <label class="form-label fw-semibold">Họ và tên</label>
+              <label class="form-label fw-semibold">Name</label>
               <input
                   type="text"
                   class="form-control"
                   :class="{ 'is-invalid': errors.name }"
                   v-model="form.name"
-                  placeholder="Cho xin cái la me đê ..."
+                  placeholder="Enter your name ..."
               />
               <div class="invalid-feedback" v-if="errors.name">
                 {{ errors.name[0] }}
@@ -93,7 +93,7 @@ async function register() {
                   class="form-control"
                   :class="{ 'is-invalid': errors.email }"
                   v-model="form.email"
-                  placeholder="Nổ cái i mew ..."
+                  placeholder="Enter your email ..."
               />
               <div class="invalid-feedback" v-if="errors.email">
                 {{ errors.email[0] }}
@@ -102,13 +102,13 @@ async function register() {
 
             <!-- Password -->
             <div class="mb-3">
-              <label class="form-label fw-semibold">Mật khẩu</label>
+              <label class="form-label fw-semibold">Password</label>
               <input
                   type="password"
                   class="form-control"
                   :class="{ 'is-invalid': errors.password }"
                   v-model="form.password"
-                  placeholder="Nổ mật khẩu lẹ ..."
+                  placeholder="Enter password ..."
               />
               <div class="invalid-feedback" v-if="errors.password">
                 {{ errors.password[0] }}
@@ -117,13 +117,13 @@ async function register() {
 
             <!-- Confirm Password -->
             <div class="mb-4">
-              <label class="form-label fw-semibold">Nhập lại mật khẩu</label>
+              <label class="form-label fw-semibold">Confirm password</label>
               <input
                   type="password"
                   class="form-control"
                   :class="{ 'is-invalid': errors.password_confirmation }"
                   v-model="form.password_confirmation"
-                  placeholder="Confirm lại phát ..."
+                  placeholder="Confirm password ..."
               />
               <div class="invalid-feedback" v-if="errors.password_confirmation">
                 {{ errors.password_confirmation[0] }}
@@ -131,7 +131,7 @@ async function register() {
             </div>
 
             <!-- SUBMIT -->
-            <SubmitBtn :loading="loading" btnName="Đăng kí nuôn"/>
+            <SubmitBtn :loading="loading" btnName="Register"/>
           </form>
           <ButtonBackToLogin/>
         </div>
