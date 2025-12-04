@@ -8,14 +8,10 @@
       <div class="four_zero_four_bg">
         <h1 class="text-center">404</h1>
       </div>
-
       <div class="contant_box_404">
-        <h3 class="h2">Ông cháu đi nhầm chỗ rồi!</h3>
-
-<!--        <p>Trang bạn đang tìm không tồn tại hoặc đã bị xoá.</p>-->
-
+        <h3 class="h2"></h3>
         <RouterLink to="/" class="link_404">
-          ➜ Đi để trở vể
+          ➜ Back
         </RouterLink>
       </div>
     </div>

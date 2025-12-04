@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, ref, type Ref, watchEffect } from "vue";
+import {inject, onMounted, ref, type Ref, watchEffect} from "vue";
 import type { User } from "../../interfaces/User";
 import userApi from "../../api/user/userApi.ts";
 
@@ -10,9 +10,15 @@ const user = inject<Ref<User | null>>("user");
 const draftName = ref("");
 const draftAvatarPreview = ref<string | null>(null); // Dùng để hiển thị ảnh preview
 const selectedFile = ref<File | null>(null); // Lưu file user vừa chọn
-
 const fileInput = ref<HTMLInputElement | null>(null);
 const isSaving = ref(false);
+import { Toast } from "bootstrap";
+let profileToast: Toast | null = null;
+
+onMounted(() => {
+  const toastEl = document.getElementById("profileToast");
+  if (toastEl) profileToast = new Toast(toastEl);
+});
 
 // Đồng bộ dữ liệu từ user gốc vào biến tạm khi component load hoặc user thay đổi
 watchEffect(() => {
@@ -32,7 +38,7 @@ const handleFileChange = (event: Event) => {
 
     // Validate size
     if (file.size > 2 * 1024 * 1024) {
-      alert("File quá lớn! Vui lòng chọn ảnh dưới 2MB.");
+      alert("Image must under 2MB.");
       return;
     }
 
@@ -59,18 +65,13 @@ const saveChanges = async () => {
     if (selectedFile.value) {
       formData.append('avatar', selectedFile.value);
     }
-    console.log('Data: ',selectedFile.value);
-    for (const pair of formData.entries()) {
-      console.log("FormData Key:", pair[0], "Value:", pair[1]);
-    }
-
     // Gọi API
     const response = await userApi.update(formData);
 
     // Cập nhật lại User gốc sau khi thành công
     user.value = response.data.data;
 
-    alert("Cập nhật thông tin thành công!");
+    if (profileToast) profileToast.show();
 
     // Reset file đã chọn
     selectedFile.value = null;
@@ -84,19 +85,10 @@ const saveChanges = async () => {
   }
 };
 const clickImage = () => {
-  if (user?.value?.imgurl) {
-    window.open(user.value.imgurl, "_blank");
+  if (draftAvatarPreview?.value) {
+    window.open(draftAvatarPreview.value, "_blank");
   }
 }
-// Hàm hủy bỏ thay đổi (Reset về ban đầu)
-// const cancelChanges = () => {
-//   if (user?.value) {
-//     draftName.value = user.value.name;
-//     draftAvatarPreview.value = user.value.imgurl || null;
-//     selectedFile.value = null;
-//     if (fileInput.value) fileInput.value.value = ''; // Reset input file
-//   }
-// };
 </script>
 
 <template>
@@ -105,8 +97,28 @@ const clickImage = () => {
       <div class="col-md-6">
         <div class="card shadow-lg rounded-4 border-0">
           <div class="card-body p-4">
+            <!-- SUCCESS TOAST -->
+            <div
+                class="toast-container position-fixed top-0 start-50 translate-middle-x p-3"
+                style="z-index: 2000;"
+            >
+              <div
+                  id="profileToast"
+                  class="toast align-items-center text-white bg-success border-0"
+                  role="alert"
+                  aria-live="assertive"
+                  aria-atomic="true"
+              >
+                <div class="d-flex">
+                  <div class="toast-body">
+                    Profile updated successfully!
+                  </div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+              </div>
+            </div>
 
-            <h4 class="text-center fw-bold text-primary mb-4">Chỉnh sửa hồ sơ</h4>
+            <h4 class="text-center fw-bold text-primary mb-4">Profile</h4>
 
             <form @submit.prevent="saveChanges">
 
@@ -153,12 +165,12 @@ const clickImage = () => {
               </div>
 
               <div class="mb-3">
-                <label class="form-label fw-bold">Họ và tên</label>
+                <label class="form-label fw-bold">Name</label>
                 <input
                     v-model="draftName"
                     type="text"
                     class="form-control"
-                    placeholder="Nhập tên hiển thị"
+                    placeholder="Enter your name here ..."
                     required
                 >
               </div>
@@ -172,7 +184,7 @@ const clickImage = () => {
                     readonly
                     disabled
                 >
-                <small class="text-muted">Không thể thay đổi email.</small>
+                <small class="text-muted">Email cannot be changed!</small>
               </div>
 
               <hr class="my-4">
@@ -183,27 +195,17 @@ const clickImage = () => {
                     type="button"
                     to="/"
                 >
-                  Quay lại
+                 Back
                 </RouterLink>
-<!--                <button-->
-<!--                    type="button"-->
-<!--                    class="btn btn-secondary"-->
-<!--                    @click="cancelChanges"-->
-<!--                    :disabled="isSaving"-->
-<!--                >-->
-<!--                  Hủy bỏ-->
-<!--                </button>-->
-
                 <button
                     type="submit"
                     class="btn btn-primary d-flex align-items-center gap-2"
                     :disabled="isSaving"
                 >
                   <span v-if="isSaving" class="spinner-border spinner-border-sm"></span>
-                  <span>{{ isSaving ? 'Đang lưu...' : 'Lưu thay đổi' }}</span>
+                  <span>{{ isSaving ? 'Saving ...' : 'Save' }}</span>
                 </button>
               </div>
-
             </form>
           </div>
         </div>

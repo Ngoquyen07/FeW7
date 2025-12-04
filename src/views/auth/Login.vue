@@ -63,7 +63,7 @@ async function login() {
             <div class="mb-3">
               <label class="form-label fw-semibold">Email</label>
               <input
-                  type="email"
+                  type="text"
                   class="form-control"
                   :class="{ 'is-invalid': errors.email }"
                   v-model="form.email"

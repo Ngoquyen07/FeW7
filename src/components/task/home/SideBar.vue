@@ -1,7 +1,5 @@
 <script setup lang="ts">
   const props = defineProps({
-    message : String,
-    messageType : String,
     logout : Function
   })
 </script>
@@ -16,11 +14,6 @@
   >
     ☰
   </button>
-  <!-- MESSAGE -->
-  <div v-if="props.message" class="alert" :class="`alert-${props.messageType}`">
-    {{ props.message }}
-  </div>
-
   <!-- SIDEBAR (Bootstrap Offcanvas) -->
   <div
       class="offcanvas offcanvas-start text-bg-dark"
