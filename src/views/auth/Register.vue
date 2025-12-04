@@ -25,23 +25,16 @@ async function register() {
 
   try {
     const res = await auth.register(form.value);
-
     if (res.status === 201) {
-      setTimeout(() => {
-        message.value = "Wait for redirecting to home!"; }, 500);
       message.value = "Register success!";
       setTimeout(() => {
-        router.push("/home"); }, 1000);
+          message.value = "Redirecting to email verification page...";
+          router.push( `/email-verify`);
+        }, 1000);
+
     } else {
       message.value = "Something went wrong, please try again" ;
     }
-    // form.value = {
-    //   name: "",
-    //   email: "",
-    //   password: "",
-    //   password_confirmation: "",
-    // };
-
   } catch (error) {
     if (error.response?.status === 422) {
       errors.value = error.response.data.errors;

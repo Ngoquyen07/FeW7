@@ -43,7 +43,6 @@ async function handleSubmit() {
       descriptionErr.value = e.response.data.error?.description?.[0]  ?? null ;
       statusErr.value = e.response.data.error?.status?.[0] ?? null;
     } else {
-      console.error(e);
       message.value = e.response.data.message;
     }
   } finally {

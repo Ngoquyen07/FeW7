@@ -207,7 +207,7 @@ async function loadTasks(page = 1): Promise<void> {
     pagination.value = res.data;
     currentPage.value = res.data.current_page;
   } catch (error) {
-    console.error("Error loading tasks:", error);
+
   } finally {
     loading.value = false;
   }

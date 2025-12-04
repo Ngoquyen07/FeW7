@@ -6,7 +6,7 @@ const auth = {
             return await axiosClient.get("/sanctum/csrf-cookie");
         }
         catch(error){
-            console.log(error);
+            throw error;
         }
     },
     async register(data : any) {
@@ -32,7 +32,6 @@ const auth = {
                 email: email
             });
         } catch (err) {
-            console.log(err);
             throw err;
         }
     },
@@ -40,7 +39,10 @@ const auth = {
     async resetPassword(data : any){
         await auth.getCSRFToken();
         return  await axiosClient.post("/reset-password" , data);
-
+    },
+    async resendEmailVerify() {
+        await auth.getCSRFToken();
+        return await axiosClient.post("email/verification-notification");
     }
 }
 export default auth;

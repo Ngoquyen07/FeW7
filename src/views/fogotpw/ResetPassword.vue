@@ -44,9 +44,7 @@ async function resetPassword() {
       password_confirmation: password_confirmation.value
     };
 
-    const res = await auth.resetPassword(payload);
-    console.log(res);
-
+    await auth.resetPassword(payload);
     messageType.value = "success";
     message.value = "Reset password success! Redirecting...";
 

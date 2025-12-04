@@ -21,8 +21,7 @@ async function forgotPassword() {
   message.value = "";
 
   try {
-    const res = await auth.forgotPassword(email.value);
-    console.log(res);
+    await auth.forgotPassword(email.value);
     messageType.value = "success";
     message.value = "Email has been sent. Please check your inbox!";
   } catch (err: any) {

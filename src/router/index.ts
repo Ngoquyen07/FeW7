@@ -10,6 +10,7 @@ import {user} from "../stores/auth.ts";
 import ForgotPassword from "../views/fogotpw/ForgotPassword.vue";
 import ResetPassword from "../views/fogotpw/ResetPassword.vue";
 import ErrNotFound from "../views/errors/ErrNotFound.vue";
+import VerifyEmail from "../views/auth/VerifyEmail.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -62,6 +63,11 @@ const router = createRouter({
             component : ResetPassword,
         },
         {
+            path:"/email-verify",
+            name:"email-verify",
+            component : VerifyEmail,
+        },
+        {
             path: "/:pathMatch(.*)*",
             name:"/404",
             component: ErrNotFound,
@@ -69,23 +75,14 @@ const router = createRouter({
     ]
 });
 router.beforeEach(async (to, _from, next) => {
-    console.log("Check trước khi điều hướng" , user.value);
     try {
         // lấy thử thôi giá trị vẫn có thể là null nếu chưa login
         if(!user.value){
-            console.log("Gửi request lấy lại user từ serve")
             user.value = await (await auth.getUser()).data;
-            console.log("user" ,user.value);
-        }
-        else{
-            console.log("Đã có user ko cần lấy lại" ,user.value.name);
         }
     } catch (error) {
-        console.log(error);
         user.value = null;
     }
-    // console.log("user" ,user);
-
     // CHƯA LOGIN
     if (!user.value) {
         if (to.name === "login" || to.name === "register" || to.name === "forgot-password" || to.name === "password-reset" ) {
@@ -93,8 +90,14 @@ router.beforeEach(async (to, _from, next) => {
         }
         return next("/login");
     }
-
     // ĐÃ LOGIN
+    else if(!user.value.email_verified_at){
+        if (to.name === "email-verify") {
+            return next();
+        }
+        // Không cho vào trang khác
+        return next(`/email-verify`);
+    }
     if (to.name === "login" || to.name === "register" || to.name === "forgot-password" || to.name === "password-reset" ) {
         return next("/");
     }
