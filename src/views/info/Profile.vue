@@ -1,26 +1,30 @@
 <script setup lang="ts">
-import {inject, onMounted, ref, type Ref, watchEffect} from "vue";
+import { inject, onMounted, ref, type Ref, watchEffect } from "vue";
 import type { User } from "../../interfaces/User";
 import userApi from "../../api/user/userApi.ts";
+import { Toast } from "bootstrap";
 
-// 1. Lấy user từ Global State
+// GLOBAL USER
 const user = inject<Ref<User | null>>("user");
 
-// 2. Tạo các biến tạm (Draft) để chỉnh sửa mà không ảnh hưởng dữ liệu thật ngay lập tức
+// LOCAL STATES
 const draftName = ref("");
-const draftAvatarPreview = ref<string | null>(null); // Dùng để hiển thị ảnh preview
-const selectedFile = ref<File | null>(null); // Lưu file user vừa chọn
+const draftAvatarPreview = ref<string | null>(null);
+const selectedFile = ref<File | null>(null);
+
 const fileInput = ref<HTMLInputElement | null>(null);
 const isSaving = ref(false);
-import { Toast } from "bootstrap";
+const errors = ref<any>({});
+
 let profileToast: Toast | null = null;
 
+// Toast init
 onMounted(() => {
   const toastEl = document.getElementById("profileToast");
   if (toastEl) profileToast = new Toast(toastEl);
 });
 
-// Đồng bộ dữ liệu từ user gốc vào biến tạm khi component load hoặc user thay đổi
+// Đồng bộ dữ liệu từ user vào draft
 watchEffect(() => {
   if (user?.value) {
     draftName.value = user.value.name;
@@ -28,7 +32,7 @@ watchEffect(() => {
   }
 });
 
-// 3. Xử lý khi chọn file (Chỉ Preview, chưa Upload)
+// File selection
 const triggerSelectFile = () => fileInput.value?.click();
 
 const handleFileChange = (event: Event) => {
@@ -36,59 +40,55 @@ const handleFileChange = (event: Event) => {
   if (target.files && target.files[0]) {
     const file = target.files[0];
 
-    // Validate size
     if (file.size > 2 * 1024 * 1024) {
-      alert("Image must under 2MB.");
+      errors.value = { avatar: ["Image must be under 2MB"] };
       return;
     }
 
-    // Lưu file vào biến để lát nữa gửi
     selectedFile.value = file;
-
-    // TẠO URL ẢNH PREVIEW (Quan trọng)
-    // Giúp hiển thị ảnh vừa chọn ngay lập tức mà chưa cần upload
     draftAvatarPreview.value = URL.createObjectURL(file);
   }
 };
 
-// 4. Hàm Lưu thay đổi (Gửi cả Tên và Ảnh)
+// Save changes
 const saveChanges = async () => {
   if (!user?.value) return;
 
+  errors.value = {};
+
   try {
     isSaving.value = true;
-    const formData = new FormData();
 
-    // Luôn gửi tên
-    formData.append('name', draftName.value);
+    const formData = new FormData();
+    formData.append("name", draftName.value);
 
     if (selectedFile.value) {
-      formData.append('avatar', selectedFile.value);
+      formData.append("avatar", selectedFile.value);
     }
-    // Gọi API
+
     const response = await userApi.update(formData);
+    user.value = response.data.data; // cập nhật store
 
-    // Cập nhật lại User gốc sau khi thành công
-    user.value = response.data.data;
-
-    if (profileToast) profileToast.show();
-
-    // Reset file đã chọn
     selectedFile.value = null;
 
-  } catch (error) {
-    console.error(error);
-    alert("Lỗi khi cập nhật.");
-
+    if (profileToast) profileToast.show();
+  } catch (error: any) {
+    if (error.response?.status === 422) {
+      errors.value = error.response.data.errors;
+      return;
+    }
+    console.error("Update error:", error);
   } finally {
     isSaving.value = false;
   }
 };
+
+// Open image when user clicks avatar
 const clickImage = () => {
   if (draftAvatarPreview?.value) {
     window.open(draftAvatarPreview.value, "_blank");
   }
-}
+};
 </script>
 
 <template>
@@ -97,6 +97,7 @@ const clickImage = () => {
       <div class="col-md-6">
         <div class="card shadow-lg rounded-4 border-0">
           <div class="card-body p-4">
+
             <!-- SUCCESS TOAST -->
             <div
                 class="toast-container position-fixed top-0 start-50 translate-middle-x p-3"
@@ -110,9 +111,7 @@ const clickImage = () => {
                   aria-atomic="true"
               >
                 <div class="d-flex">
-                  <div class="toast-body">
-                    Profile updated successfully!
-                  </div>
+                  <div class="toast-body">Profile updated successfully!</div>
                   <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
               </div>
@@ -122,6 +121,7 @@ const clickImage = () => {
 
             <form @submit.prevent="saveChanges">
 
+              <!-- AVATAR -->
               <div class="text-center mb-4">
                 <div class="avatar-container d-inline-block position-relative mb-3">
 
@@ -133,6 +133,7 @@ const clickImage = () => {
                       style="width: 120px; height: 120px;"
                       @click="clickImage"
                   >
+
                   <div
                       v-else
                       class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto"
@@ -141,14 +142,15 @@ const clickImage = () => {
                     {{ draftName.charAt(0).toUpperCase() }}
                   </div>
 
+                  <!-- CHANGE AVATAR BUTTON -->
                   <button
                       type="button"
                       class="btn btn-light border position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
                       style="width: 36px; height: 36px;"
                       @click="triggerSelectFile"
-                      title="Đổi ảnh"
+                      title="Change avatar"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  class="bi bi-camera-fill text-primary" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-camera-fill text-primary" viewBox="0 0 16 16">
                       <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
                       <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
                     </svg>
@@ -164,17 +166,22 @@ const clickImage = () => {
                 </div>
               </div>
 
+              <!-- NAME -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Name</label>
                 <input
                     v-model="draftName"
                     type="text"
                     class="form-control"
+                    :class="{ 'is-invalid': errors.name }"
                     placeholder="Enter your name here ..."
-                    required
                 >
+                <div v-if="errors.name" class="invalid-feedback">
+                  {{ errors.name[0] }}
+                </div>
               </div>
 
+              <!-- EMAIL -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Email</label>
                 <input
@@ -184,28 +191,25 @@ const clickImage = () => {
                     readonly
                     disabled
                 >
-                <small class="text-muted">Email cannot be changed!</small>
+                <small class="text-muted">Email cannot be changed.</small>
               </div>
 
               <hr class="my-4">
 
+              <!-- BUTTONS -->
               <div class="d-flex justify-content-end gap-2">
-                <RouterLink
-                    class="btn btn-secondary"
-                    type="button"
-                    to="/"
-                >
-                 Back
-                </RouterLink>
+                <RouterLink class="btn btn-secondary" to="/">Back</RouterLink>
+
                 <button
                     type="submit"
                     class="btn btn-primary d-flex align-items-center gap-2"
                     :disabled="isSaving"
                 >
                   <span v-if="isSaving" class="spinner-border spinner-border-sm"></span>
-                  <span>{{ isSaving ? 'Saving ...' : 'Save' }}</span>
+                  <span>{{ isSaving ? 'Saving...' : 'Save' }}</span>
                 </button>
               </div>
+
             </form>
           </div>
         </div>
